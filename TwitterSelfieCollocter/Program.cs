@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace TwitterSelfieCollocter
@@ -12,6 +13,8 @@ namespace TwitterSelfieCollocter
         static void Main(string[] args)
         {
             SelfieTweetFunc.Instance.searchList();
+
+            Thread.Sleep(180*1000);
 
             SelfieFacerecognizer.Instance.checkALL();
         }
