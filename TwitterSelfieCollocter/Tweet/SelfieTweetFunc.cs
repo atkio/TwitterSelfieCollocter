@@ -143,7 +143,7 @@ namespace TwitterSelfieCollocter
             foreach (var listd in db.getLTLMaxid())
             {
                 ulong newid;
-                var result = SelfieTweetFilter.Filter(TweetHelper.GetList(authapp, listd.UID, listd.LIST, ulong.Parse(listd.SINCEID), out newid));
+                var result = SelfieTweetFilter.Filter(TweetHelper.GetList(authapp, listd.UID, listd.LIST, ulong.Parse(listd.SINCEID), out newid,2000));
                 listd.SINCEID = newid.ToString();
                 db.updateLTLMaxid(listd);
                 if (result.Count > 0)
