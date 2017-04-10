@@ -366,8 +366,16 @@ namespace TwitterSelfieCollocter
 
                     if (listResponse == null)
                         break;
-
+                    
+                    if (listResponse.Statuses == null)
+                        break;
+                 
+                 
                     newStatuses = listResponse.Statuses;
+                    
+                    if(newStatuses.Count < 1)
+                        break;
+                    
                     // first tweet processed on current query
                     maxID = newStatuses.Min(status => status.StatusID) - 1;
                     statusList.AddRange(newStatuses);
