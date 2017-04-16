@@ -1,6 +1,7 @@
 ﻿using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
+using SimpleOneDrive;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -60,12 +61,20 @@ namespace TwitterSelfieCollocter
 
             foreach (var tid in isfaces)
             {
-                var targetPath = Path.Combine(config.PhotoPath, tid.UID);
-                if(!Directory.Exists(targetPath))
+                //var targetPath = Path.Combine(config.PhotoPath, tid.UID);
+                //if(!Directory.Exists(targetPath))
+                //{
+                //    Directory.CreateDirectory(targetPath);
+                //}
+                //File.Copy(tid.PhotoPath, Path.Combine(targetPath, new FileInfo(tid.PhotoPath).Name));
+                try
                 {
-                    Directory.CreateDirectory(targetPath);
+                    SimpleClient.Instance.uploadFileFromUrl(tid.PhotoUrl, new FileInfo(tid.PhotoPath).Name,"cosplay");
                 }
-                File.Copy(tid.PhotoPath, Path.Combine(targetPath, new FileInfo(tid.PhotoPath).Name));
+                catch(Exception e)
+                {
+                    DebugLogger.Instance.W(e.StackTrace);
+                }
             }
 
             db.removeAllWaitRecognizer();
