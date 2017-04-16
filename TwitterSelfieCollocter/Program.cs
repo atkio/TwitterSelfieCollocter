@@ -12,11 +12,15 @@ namespace TwitterSelfieCollocter
     {
         static void Main(string[] args)
         {
+            DebugLogger.Instance.W("SearchList > START");
             SelfieTweetFunc.Instance.searchList();
+            DebugLogger.Instance.W("SearchList > END");
 
             Thread.Sleep(180*1000);
 
+            DebugLogger.Instance.W("SelfieFacerecognizer > START");
             SelfieFacerecognizer.Instance.checkALL();
+             DebugLogger.Instance.W("SelfieFacerecognizer > END");
         }
     }
 

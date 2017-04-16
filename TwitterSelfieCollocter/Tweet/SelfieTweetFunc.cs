@@ -143,7 +143,7 @@ namespace TwitterSelfieCollocter
             foreach (var listd in db.getLTLMaxid())
             {
                 ulong newid;
-                var result = SelfieTweetFilter.Filter(TweetHelper.GetList(authapp, listd.UID, listd.LIST, ulong.Parse(listd.SINCEID), out newid));
+                var result = SelfieTweetFilter.Filter(TweetHelper.GetList(authapp, listd.UID, listd.LIST, ulong.Parse(listd.SINCEID), out newid,2000));
                 listd.SINCEID = newid.ToString();
                 db.updateLTLMaxid(listd);
                 if (result.Count > 0)
@@ -366,8 +366,16 @@ namespace TwitterSelfieCollocter
 
                     if (listResponse == null)
                         break;
-
+                    
+                    if (listResponse.Statuses == null)
+                        break;
+                 
+                 
                     newStatuses = listResponse.Statuses;
+                    
+                    if(newStatuses.Count < 1)
+                        break;
+                    
                     // first tweet processed on current query
                     maxID = newStatuses.Min(status => status.StatusID) - 1;
                     statusList.AddRange(newStatuses);
