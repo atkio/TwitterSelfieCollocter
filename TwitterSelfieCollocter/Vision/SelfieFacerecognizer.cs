@@ -127,19 +127,28 @@ namespace TwitterSelfieCollocter
 
         private async Task<string> checkuserpath(string pathname)
         {
-            var item = await SimpleClient.Instance.getItem(SelfieBotConfig.Instance.onedrive.RemoteRootID);
-            if(item.children.Any(c=>c.name == pathname && c.folder != null))
+            var items = await SimpleClient.Instance.searchMetafromName("cosplay");
+            if (items.value.Count > 0)
             {
-                return item.children.Where(c => c.name == pathname && c.folder != null).First().id;
+                var item = items.value[0];
+                if (item.children.Any(c => c.name == pathname && c.folder != null))
+                {
+                    return item.children.Where(c => c.name == pathname && c.folder != null).First().id;
+                }
+                else
+                {
+                    item = await SimpleClient.Instance.CreateFolder(item.id, pathname);
+                    if (item.id == null)
+                        throw new Exception("can not create folder:" + pathname);
+
+                    return item.id;
+
+                }
             }
             else
             {
-               item= await SimpleClient.Instance.CreateFolder(SelfieBotConfig.Instance.onedrive.RemoteRootID, pathname);
-                if(item.id == null)
-                    throw new Exception("can not create folder:" + pathname);
-
-                return item.id;
-
+                await SimpleClient.Instance.CreateFolder("cosplay");
+                return await checkuserpath(pathname);
             }
 
 
