@@ -130,7 +130,7 @@ namespace TwitterSelfieCollocter
             var items = await SimpleClient.Instance.searchMetafromName("cosplay");
             if (items.value.Count > 0)
             {
-                var item = items.value[0];
+                var item = await SimpleClient.Instance.getItem(items.value[0].id);
                 if (item.children.Any(c => c.name == pathname && c.folder != null))
                 {
                     return item.children.Where(c => c.name == pathname && c.folder != null).First().id;
