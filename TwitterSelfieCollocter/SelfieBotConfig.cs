@@ -21,6 +21,14 @@ namespace TwitterSelfieCollocter
         public TwitterDefine Twitter { get; set; }
 
 
+        public struct OneDriveDefine
+        {
+            public bool IsValue;
+            public string RemoteRootID;
+        }
+
+        public OneDriveDefine onedrive {get;set;}
+
         /// <summary>
         /// 本地临时保存图片的位置
         /// </summary>

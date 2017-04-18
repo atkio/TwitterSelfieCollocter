@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace TwitterSelfieCollocter
 {
@@ -57,25 +59,14 @@ namespace TwitterSelfieCollocter
 
             DebugLogger.Instance.W("found faces >" + isfaces.Count);
 
-           
 
-            foreach (var tid in isfaces)
+            if (config.onedrive.IsValue)
             {
-                //var targetPath = Path.Combine(config.PhotoPath, tid.UID);
-                //if(!Directory.Exists(targetPath))
-                //{
-                //    Directory.CreateDirectory(targetPath);
-                //}
-                //File.Copy(tid.PhotoPath, Path.Combine(targetPath, new FileInfo(tid.PhotoPath).Name));
-                try
-                {
-                    SimpleClient.Instance.uploadFileFromUrl(tid.PhotoUrl, new FileInfo(tid.PhotoPath).Name,"cosplay");
-                }
-                catch(Exception e)
-                {
-                    DebugLogger.Instance.W(e.StackTrace);
-                }
+                uploadtoonedrive(isfaces);
             }
+           
+            copytolocal(config, isfaces);
+            
 
             db.removeAllWaitRecognizer();
 
@@ -87,6 +78,70 @@ namespace TwitterSelfieCollocter
             }
 
             DebugLogger.Instance.W("Deleted all files");
+        }
+
+        private static void copytolocal(SelfieBotConfig config, List<WaitRecognizer> isfaces)
+        {
+            foreach (var tid in isfaces)
+            {
+                var targetPath = Path.Combine(config.PhotoPath, tid.UID);
+                if (!Directory.Exists(targetPath))
+                {
+                    Directory.CreateDirectory(targetPath);
+                }
+                try
+                {
+                    File.Copy(tid.PhotoPath, Path.Combine(targetPath, new FileInfo(tid.PhotoPath).Name));
+                }
+                catch (Exception e)
+                {
+                    DebugLogger.Instance.W(e.Message);
+
+                }
+            }
+        }
+
+        private void uploadtoonedrive(List<WaitRecognizer> isfaces)
+        {
+            isfaces.GroupBy(f => f.UID)
+                .ToList()
+                .ForEach(us =>
+                {
+                    try
+                    {
+                        var pid = checkuserpath(us.Key).Result;
+                        foreach (var f in us)
+                        {
+                            SimpleClient.Instance.uploadFileFromUrl(f.PhotoUrl, new FileInfo(f.PhotoPath).FullName, pid);
+                            Thread.Sleep(500);
+                        }
+                    }
+                    catch(Exception e)
+                    {
+                        DebugLogger.Instance.W(e.Message);
+                    }
+
+                });
+        }
+
+        private async Task<string> checkuserpath(string pathname)
+        {
+            var item = await SimpleClient.Instance.getItem(SelfieBotConfig.Instance.onedrive.RemoteRootID);
+            if(item.children.Any(c=>c.name == pathname && c.folder != null))
+            {
+                return item.children.Where(c => c.name == pathname && c.folder != null).First().id;
+            }
+            else
+            {
+               item= await SimpleClient.Instance.CreateFolder(SelfieBotConfig.Instance.onedrive.RemoteRootID, pathname);
+                if(item.id == null)
+                    throw new Exception("can not create folder:" + pathname);
+
+                return item.id;
+
+            }
+
+
         }
 
         protected static bool IsFileLocked(string file)
