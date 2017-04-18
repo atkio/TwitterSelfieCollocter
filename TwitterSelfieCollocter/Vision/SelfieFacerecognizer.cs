@@ -119,6 +119,7 @@ namespace TwitterSelfieCollocter
                     catch(Exception e)
                     {
                         DebugLogger.Instance.W(e.Message);
+                        DebugLogger.Instance.W(e.StackTrace);
                     }
 
                 });
