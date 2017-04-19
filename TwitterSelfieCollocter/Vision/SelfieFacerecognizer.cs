@@ -112,7 +112,9 @@ namespace TwitterSelfieCollocter
                         var pid = checkuserpath(us.Key).Result;
                         foreach (var f in us)
                         {
-                            SimpleClient.Instance.uploadFileFromUrl(f.PhotoUrl, new FileInfo(f.PhotoPath).FullName, pid).Run().Wait();
+                            
+                            Task.Run(async () => { await 
+                                SimpleClient.Instance.uploadFileFromUrl(f.PhotoUrl, new FileInfo(f.PhotoPath).FullName, pid);}).Wait();
                             Thread.Sleep(500);
                         }
                     }
