@@ -53,7 +53,7 @@ namespace TwitterSelfieCollocter
 
         public static bool savefile(WaitRecognizer def)
         {
-            return true;
+           
             try
             {
                 if (!Directory.Exists(config.PhotoTempPath))
@@ -67,8 +67,8 @@ namespace TwitterSelfieCollocter
                      address.LocalPath;
                 string fileName = Path.GetFileName(localpath);
                 def.PhotoPath = Path.Combine(config.PhotoTempPath, fileName);
-
-                PoolAndDownloadFile(address, def.PhotoPath);
+                
+                //PoolAndDownloadFile(address, def.PhotoPath);
                 return true;
             }
             catch (Exception ex)
