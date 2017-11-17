@@ -16,7 +16,8 @@ namespace TwitterSelfieCollocter
             var stored = db.getAllWaitRecognizer().Select(nr => nr.TID).Distinct();
             foreach (var def in defs.Where(d => !stored.Contains(d.TID)))
             {
-                if (dl(def)) db.addWaitRecognizer(def);
+                if (dl(def)) 
+                    db.addWaitRecognizer(def);
             }
         }
 
@@ -52,6 +53,7 @@ namespace TwitterSelfieCollocter
 
         public static bool savefile(WaitRecognizer def)
         {
+            return true;
             try
             {
                 if (!Directory.Exists(config.PhotoTempPath))
