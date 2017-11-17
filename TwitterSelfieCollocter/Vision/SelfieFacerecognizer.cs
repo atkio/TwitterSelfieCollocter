@@ -54,10 +54,10 @@ namespace TwitterSelfieCollocter
        
 
             //本地查出有脸图片
-            isfaces = nrs.Where(n => Detect(n.PhotoPath))
+            isfaces = nrs//.Where(n => Detect(n.PhotoPath))
                          .ToList();
 
-            DebugLogger.Instance.W("found faces >" + isfaces.Count);
+            //DebugLogger.Instance.W("found faces >" + isfaces.Count);
 
 
             if (config.onedrive.IsValue)
@@ -65,7 +65,7 @@ namespace TwitterSelfieCollocter
                 uploadtoonedrive(isfaces);
             }
            
-            copytolocal(config, isfaces);
+            //copytolocal(config, isfaces);
             
 
             db.removeAllWaitRecognizer();
@@ -171,6 +171,7 @@ namespace TwitterSelfieCollocter
 
         public static bool Detect(string file)
         {
+            return true;
             try
             {
                 using (CascadeClassifier aniface = new CascadeClassifier(anifaceFileName))
