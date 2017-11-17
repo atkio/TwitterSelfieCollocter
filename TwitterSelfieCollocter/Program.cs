@@ -16,7 +16,7 @@ namespace TwitterSelfieCollocter
             SelfieTweetFunc.Instance.searchList();
             DebugLogger.Instance.W("SearchList > END");
 
-            Thread.Sleep(180*1000);
+            //Thread.Sleep(180*1000);
 
             DebugLogger.Instance.W("SelfieFacerecognizer > START");
             SelfieFacerecognizer.Instance.checkALL();
